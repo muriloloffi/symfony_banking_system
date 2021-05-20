@@ -5,8 +5,8 @@ As I update this README, in may 2021, I am still working on improvements as a me
 
 ## Setting up the environment
 
-This README is written for work environments with any Linux distro or WSL2. 
-You will need three tools installed: git, docker and docker-compose.
+Notice: This README is for work environments with Linux distros or Windows Subsystem for Linux 2 (WSL2). 
+That being said, you will need three tools installed: git, docker and docker-compose.
 
 ### Clone this repository; 
 
@@ -26,12 +26,12 @@ docker-compose up -d
 After the start up succeded, create a new clean database, then execute some so-called migrations to set up the application model. 
 It's half-way automated, just type in:
 
-Creating the database:
+To create the database:
 ```bash
 docker-compose exec php php bin/console doctrine:database:create
 ```
 
-Creating the application model:
+To create the application model:
 ```bash
 docker-compose exec php php bin/console doctrine:migrations:migrate
 ```
