@@ -1,0 +1,58 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Contas - 
+{% endblock %}
+
+
+{% block body %}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".bt_delete_account").click(function(ev) {
+                ev.preventDefault();
+
+                var url = $(this).prop("href");
+
+                if (confirm("Deseja excluir essa conta?")) {
+                    window.location = url;
+                }
+            });
+        })
+	</script>
+
+    <h1>Lista de contas</h1>
+    <hr>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Numero da conta</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for account in accounts %}
+            <tr>
+                <td>{{ account.person.name }}</td>
+                <td>{{ account.person.cpf }}</td>
+                <td>{{ account.number }} </td>
+                <td>
+                    <a class="btn btn-sm btn-success" href="{{ path('update_account', {"account_id": account.id}) }}"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-sm btn-danger bt_delete_account" href="{{ path('delete_account', {"account_id": account.id}) }}"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{ path('create_account') }}" class="btn btn-primary btn-lg pull-right">Cadastrar Conta</a>
+        </div>
+    </div>
+
+{% endblock %}

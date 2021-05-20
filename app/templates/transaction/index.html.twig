@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Contas - 
+{% endblock %}
+
+
+{% block body %}
+
+    <h2>{{ account.person.name }} - CPF: {{ account.person.cpf }}</h2>
+    <h3>Conta: {{ account.number }} - Saldo: {{ account.balance | format_currency('BRL') }} </h3>
+
+    {% if accountStatement is defined %}
+    
+    <br><br>
+    <h4>Extrato:</h4> 
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Operação</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for record in accountStatement %}
+        <tr>
+            <td>{{ record.getCreatedAt | date('d-m-Y h:m:s') }}</td>
+            <td>{{ record.action }}</td>
+            <td>{{ record.value | format_currency('BRL') }}</td>
+        </tr>
+        {% endfor %}
+
+        <tr>
+            <td class="table-dark" colspan="2">Saldo:</td>
+            <td class="table-dark"> {{ balance | format_currency('BRL') }} </td>
+        </tr>
+        </tbody>
+    </table>
+    {% endif %}
+
+
+
+{% endblock %}

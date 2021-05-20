@@ -1,0 +1,19 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+<div class="form-group">
+    {{ form_label(form.person) }}
+    {{ form_widget(form.person) }}
+    {{ form_errors(form.person) }}
+</div>
+
+<div class="form-group">
+    {{ form_label(form.number) }}
+    {{ form_widget(form.number) }}
+    {{ form_errors(form.number) }}
+</div>
+
+</br>
+<div class="form-group">
+    {{ form_label(form.submit) }}
+    {{ form_widget(form.submit) }}
+</div>
+{{ form_end(form) }}

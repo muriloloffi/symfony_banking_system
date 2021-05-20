@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Edição de pessoa - 
+{% endblock %}
+
+{% block body %}
+
+    <h1>Edição de pessoa - <small>{{ person.name }}</small></h1>
+    <hr>
+    {% include "person/_form.html.twig" %}
+
+{% endblock %}
