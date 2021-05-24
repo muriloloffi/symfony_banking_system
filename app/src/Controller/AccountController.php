@@ -47,8 +47,8 @@ class AccountController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            if (!$accountBusiness->isUnique($account)){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$accountBusiness->isUnique($account)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', 'Número de conta existente!');
                 return $this->render('account/update.html.twig', [
@@ -82,22 +82,22 @@ class AccountController extends AbstractController
         $form = $this->createForm(AccountType::class, $account);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-            if (!$accountBusiness->isUnique($account)){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$accountBusiness->isUnique($account)) {
                 $this->get('session')->getFlashbag()->set('warning', 'Número de conta existente!');
                 return $this->render('account/update.html.twig', [
                     'account' => $account,
                     'form' => $form->createView()
                 ]);
             }
-            
+
             $em->persist($account);
             $em->flush();
 
             $this->addFlash('success', "Conta atualizada!");
             return $this->redirectToRoute("account");
         }
-        
+
         return $this->render('account/update.html.twig', [
             'account' => $account,
             'form' => $form->createView()
@@ -113,7 +113,7 @@ class AccountController extends AbstractController
             ->getRepository(Account::class)
             ->find($account_id);
 
-        if(!$account) {
+        if (!$account) {
             $tipo = "warning";
             $mensagem = "Conta não encontrada.";
         } elseif ($accountBusiness->hasTransaction($account)) {

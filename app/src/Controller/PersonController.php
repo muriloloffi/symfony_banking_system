@@ -47,8 +47,8 @@ class PersonController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            if (!$personBusiness->validateCPF($person)){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$personBusiness->validateCPF($person)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', 'Número de CPF inválido!');
 
@@ -68,7 +68,7 @@ class PersonController extends AbstractController
         }
 
         return $this->render('person/create.html.twig', [
-            'form' => $form->createView() 
+            'form' => $form->createView()
         ]);
     }
 
@@ -83,8 +83,8 @@ class PersonController extends AbstractController
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-            if (!$personBusiness->validateCPF($person)){
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (!$personBusiness->validateCPF($person)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', 'Número de CPF inválido!');
                 return $this->render('person/update.html.twig', [
@@ -99,7 +99,7 @@ class PersonController extends AbstractController
             $this->addFlash('success', "Pessoa atualizada!");
             return $this->redirectToRoute("persons");
         }
-        
+
         return $this->render('person/update.html.twig', [
             'person' => $person,
             'form' => $form->createView()
@@ -115,7 +115,7 @@ class PersonController extends AbstractController
             ->getRepository(Person::class)
             ->find($person_id);
 
-        if(!$person) {
+        if (!$person) {
             $tipo = "warning";
             $mensagem = "Pessoa não encontrada.";
         } elseif ($personBusiness->hasAccount($person)) {

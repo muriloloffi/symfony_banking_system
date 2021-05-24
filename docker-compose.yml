@@ -38,10 +38,19 @@ services:
 
   # Helpers
   composer:
-    image: composer:2    
+    image: composer:2
+    tty: true 
     command: ["composer", "install"]
     depends_on:
       - php
+    volumes:
+      - "./app:/app"
+
+  composer-keepalive:
+    image: composer:2
+    command: ["sleep", "infinity"]
+    depends_on:
+      - composer
     volumes:
       - "./app:/app"
 
