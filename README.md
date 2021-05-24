@@ -23,8 +23,10 @@ Now, start up the environment by exectuing:
 docker-compose up -d
 ```
 
-After the start up succeded, create a new clean database, then execute some so-called migrations to set up the application model. 
-It's half-way automated, just type in:
+After the startup succeded, set the connection string for the database. Open the .env file inside the /app/ folder, scroll to the botton of the file and comment the line that says "DATABASEURL=postgres(...)", then uncomment the line with "DATABASEURL=mysql" and change db_user to 'root', password to '123.456', address to 'mysql' and db_name to 'symfony_bank_db':
+
+Now, create a new clean database, then execute some so-called migrations to set up the application model. 
+From this step and on, it's half-way automated, just type in:
 
 To create the database:
 ```bash
