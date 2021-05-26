@@ -9,3 +9,16 @@ balance:
 transaction:
   has:
     succeed: Transaction successfully completed!
+
+cpf:
+  is:
+    invalid: Invalid CPF!
+
+person:
+  is:
+    registered: Person successfully registered!
+    updated: Person updated!
+    absent: Person not found!
+    deleted: Person successfully deleted!
+  has:
+    account: This person has an account and should not be deleted.

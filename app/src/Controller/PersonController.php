@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PersonController extends AbstractController
 {
@@ -39,7 +40,7 @@ class PersonController extends AbstractController
     /**
      * @Route("/person/register", name="person_registration", methods={"GET", "POST"})
      */
-    public function newPerson(Request $request, PersonBusiness $personBusiness): Response
+    public function newPerson(Request $request, PersonBusiness $personBusiness, TranslatorInterface $translator): Response
     {
         $person = new Person();
 
@@ -50,7 +51,7 @@ class PersonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$personBusiness->validateCPF($person)) {
                 $this->get('session')->getFlashbag()
-                    ->set('warning', 'Número de CPF inválido!');
+                    ->set('warning', $translator->trans('cpf.is.invalid'));
 
                 return $this->render('person/create.html.twig', [
                     'person' => $person,
@@ -62,7 +63,7 @@ class PersonController extends AbstractController
             $this->entityManager->flush();
 
             $this->get('session')->getFlashbag()
-                ->set('success', 'Pessoa cadastrada com sucesso!');
+                ->set('success', $translator->trans('person.is.registered'));
 
             return $this->redirectToRoute('persons');
         }
@@ -75,7 +76,7 @@ class PersonController extends AbstractController
     /**
      * @Route("person/update/{person_id}", name="update_person")
      */
-    public function update(Request $request, int $person_id, PersonBusiness $personBusiness): Response
+    public function update(Request $request, int $person_id, PersonBusiness $personBusiness, TranslatorInterface $translator): Response
     {
         $em = $this->getDoctrine()->getManager();
         $person = $em->getRepository(Person::class)->find($person_id);
@@ -86,7 +87,7 @@ class PersonController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$personBusiness->validateCPF($person)) {
                 $this->get('session')->getFlashbag()
-                    ->set('warning', 'Número de CPF inválido!');
+                    ->set('warning', $translator->trans('cpf.is.invalid'));
                 return $this->render('person/update.html.twig', [
                     'person' => $person,
                     'form' => $form->createView()
@@ -96,7 +97,7 @@ class PersonController extends AbstractController
             $em->persist($person);
             $em->flush();
 
-            $this->addFlash('success', "Pessoa atualizada!");
+            $this->addFlash('success', $translator->trans("person.is.updated"));
             return $this->redirectToRoute("persons");
         }
 
@@ -109,7 +110,7 @@ class PersonController extends AbstractController
     /**
      * @Route("/person/delete/{person_id}", name="delete_person")
      */
-    public function delete(int $person_id, PersonBusiness $personBusiness): Response
+    public function delete(int $person_id, PersonBusiness $personBusiness, TranslatorInterface $translator): Response
     {
         $person = $this->entityManager
             ->getRepository(Person::class)
@@ -117,15 +118,15 @@ class PersonController extends AbstractController
 
         if (!$person) {
             $tipo = "warning";
-            $mensagem = "Pessoa não encontrada.";
+            $mensagem = $translator->trans("person.is.absent");
         } elseif ($personBusiness->hasAccount($person)) {
             $tipo = "warning";
-            $mensagem = "Esta pessoa possui conta e não pode ser excluída.";
+            $mensagem = $translator->trans("person.has.account");
         } else {
             $this->entityManager->remove($person);
             $this->entityManager->flush();
             $tipo = "success";
-            $mensagem = "Pessoa foi excluída com sucesso!";
+            $mensagem = $translator->trans("person.is.deleted");
         }
 
         $this->get('session')->getFlashbag()->set($tipo, $mensagem);
