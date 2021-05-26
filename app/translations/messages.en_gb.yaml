@@ -1,0 +1,3 @@
+amount:
+  is:
+    invalid: Invalid amount!

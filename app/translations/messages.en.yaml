@@ -1,0 +1,11 @@
+amount:
+  is:
+    invalid: Invalid amount!
+
+balance:
+  is:
+    insufficient: Insufficient funds!
+
+transaction:
+  has:
+    succeed: Transaction successfully completed!

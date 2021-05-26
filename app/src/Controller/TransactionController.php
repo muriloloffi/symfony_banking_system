@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransactionController extends AbstractController
 {
@@ -26,7 +27,7 @@ class TransactionController extends AbstractController
     /**
      * @Route("/transacion/statement/{account_id}", name="statement")
      */
-    public function statement(int $account_id, Request $request)
+    public function bankStatement(int $account_id, Request $request)
     {
         $accountStatement = $this->entityManager->getRepository(Transaction::class)->findBy(['account' => $account_id]);
         $account = $this->entityManager->getRepository(Account::class)->findOneBy(['id' => $account_id]);
@@ -39,9 +40,9 @@ class TransactionController extends AbstractController
     }
 
     /**
-    * @Route("/transaction/create", name="create_transaction")
-    */
-    public function transaction(Request $request, TransactionBusiness $transactionBusiness, AccountBusiness $accountBusiness): Response
+     * @Route("/transaction/create", name="create_transaction")
+     */
+    public function transaction(Request $request, TransactionBusiness $transactionBusiness, AccountBusiness $accountBusiness, TranslatorInterface $translator): Response
     {
         $transaction = new Transaction();
 
@@ -49,17 +50,25 @@ class TransactionController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
-            
-            if (!$transactionBusiness->isValidAmount($transaction->getValue())){
-                $this->get('session')->getFlashbag()
-                    ->set('warning', 'Montante inválido!');
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if (!$transactionBusiness->isValidAmount($transaction->getValue())) {
+                $this->get('session')
+                    ->getFlashbag()
+                    ->set(
+                        'warning',
+                        $translator->trans('amount.is.invalid')
+                    );
                 return $this->redirectToRoute('create_transaction');
             }
 
-            if ($transaction->getAction() === "Sacar" && !$transactionBusiness->hasBalance($transaction->getAccount(), $transaction->getValue())){
-                $this->get('session')->getFlashbag()
-                    ->set('warning', 'Saldo insuficiente!');
+            if ($transaction->getAction() === "Sacar" && !$transactionBusiness->hasBalance($transaction->getAccount(), $transaction->getValue())) {
+                $this->get('session')
+                    ->getFlashbag()
+                    ->set(
+                        'warning',
+                        $translator->trans('balance.is.insufficient')
+                    );
                 return $this->redirectToRoute('create_transaction');
             }
 
@@ -71,7 +80,12 @@ class TransactionController extends AbstractController
             $this->entityManager->persist($transaction);
             $this->entityManager->flush();
 
-            $this->get('session')->getFlashbag()->set('success', 'Transação realizada com sucesso!');
+            $this->get('session')
+                ->getFlashbag()
+                ->set(
+                    'success',
+                    $translator->trans('transaction.has.succeed')
+                );
 
             return $this->redirectToRoute('statement', [
                 'account_id' => $transaction->getAccount()->getId()
