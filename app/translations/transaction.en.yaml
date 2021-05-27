@@ -1,17 +1,19 @@
 transaction:
-  title: "Transactions -&nbsp"
   person:
     id: "%name% -- ITR: %cpf%"
   account:
     info: "Account: %number% - Balance: %balance%"
   statement:
-    title: "Statement"
-    header:
-      date: "Date"
-      operation: "Operation"
-      values: "Values"
+    title: "Transactions -&nbsp"
+    table:
+      title: "Statement"
+      date-header: "Date"
+      operation-header: "Operation"
+      values-header: "Values"
     footer:
       balance: "Balance:"
+  form:
+    title: "Transaction Registration"
 
 # Variable text shown in the statement table
 Depositar: "Deposit"

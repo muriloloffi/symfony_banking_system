@@ -1,26 +1,32 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Cadastro de movimentações - 
+	{% trans from 'transaction' %}
+	transaction.form.title
+	{% endtrans %}
 {% endblock %}
 
 {% block body %}
 
 
-    {% for flashMessage in app.session.flashbag.get('success') %}
-        <div class="alert alert-success">
-            {{ flashMessage }}
-        </div>
-    {% endfor %}
+	{% for flashMessage in app.session.flashbag.get('success') %}
+		<div class="alert alert-success">
+			{{ flashMessage }}
+		</div>
+	{% endfor %}
 
-    {% for flashMessage in app.session.flashbag.get('warning') %}
-        <div class="alert alert-warning">
-            {{ flashMessage }}
-        </div>
-    {% endfor %}
+	{% for flashMessage in app.session.flashbag.get('warning') %}
+		<div class="alert alert-warning">
+			{{ flashMessage }}
+		</div>
+	{% endfor %}
 
-    <h1>Cadastrar movimentações</h1>
-    <hr>
-    {% include "transaction/_form.html.twig" %}
+	<h1>
+		{% trans from 'transaction' %}
+		transaction.form.title
+		{% endtrans %}
+	</h1>
+	<hr>
+	{% include "transaction/_form.html.twig" %}
 
 {% endblock %}

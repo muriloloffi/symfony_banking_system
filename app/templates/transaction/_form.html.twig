@@ -1,53 +1,30 @@
 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 <div class="form-group">
-    {{ form_row(form.person) }} {# <select id="account_holder" ... #}
+	{{ form_row(form.person) }}
+	{# <select id="account_holder" ... #}
 </div>
 
 <div class="form-group">
-    {{ form_row(form.account) }} {# <select id="account_number" ... #}
+	{{ form_row(form.account) }}
+	{# <select id="account_number" ... #}
 </div>
 
 <div class="form-group">
-    {{ form_label(form.value) }}
-    {{ form_widget(form.value) }}
-    {{ form_errors(form.value) }}
+	{{ form_label(form.value) }}
+	{{ form_widget(form.value) }}
+	{{ form_errors(form.value) }}
 </div>
 
 <div class="form-group">
-    {{ form_label(form.action) }}
-    {{ form_widget(form.action) }}
-    {{ form_errors(form.action) }}
-</div>
+	{{ form_label(form.action) }}
+	{{ form_widget(form.action) }}
+	{{ form_errors(form.action) }}
+</div><br>
 
-</br>
 <div class="form-group">
-    {{ form_label(form.submit) }}
-    {{ form_widget(form.submit) }}
+	{{ form_label(form.submit) }}
+	{{ form_widget(form.submit) }}
 </div>
 {{ form_end(form) }}
 
-<script>
-    var $person = $( "#transaction_person" );
-    // When sport gets selected ...
-    $person.change(function() {
-        // ... retrieve the corresponding form.
-        var $form = $(this).closest('form');
-        // Simulate form data, but only include the selected sport value.
-        var data = {};
-        data[$person.attr('name')] = $person.val();
-        // Submit data via AJAX to the form's action path.
-        $.ajax({
-            url : $form.attr('action'),
-            type: $form.attr('method'),
-            data : data,
-            success: function(html) {
-            // Replace current position field ...
-            $('#transaction_account').replaceWith(
-                // ... with the returned one from the AJAX response.
-                $(html).find('#transaction_account')
-            );
-            // Position field now displays the appropriate positions.
-            }
-        });
-    });
-</script>
+<script src="./../../../scripts/transactionForm.js"></script>
