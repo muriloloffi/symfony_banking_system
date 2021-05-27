@@ -77,7 +77,7 @@ class TransactionController extends AbstractController
             $this->entityManager->flush();
 
             $this->get('session')->getFlashbag()
-                ->set('success', $translator->trans('transaction.has.succeed'));
+                ->set('success', $translator->trans('transaction.did.succeed'));
 
             return $this->redirectToRoute('statement', [
                 'account_id' => $transaction->getAccount()->getId()

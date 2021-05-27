@@ -1,0 +1,5 @@
+base:
+  header:
+    people: People
+    accounts: Accounts
+    banking_movement: Banking Movement

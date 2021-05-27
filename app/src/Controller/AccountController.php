@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
 {
@@ -39,7 +40,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/account/create", name="create_account")
      */
-    public function create(Request $request, AccountBusiness $accountBusiness): Response
+    public function create(Request $request, AccountBusiness $accountBusiness, TranslatorInterface $translator): Response
     {
         $account = new Account();
 
@@ -50,7 +51,8 @@ class AccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$accountBusiness->isUnique($account)) {
                 $this->get('session')->getFlashbag()
-                    ->set('warning', 'Número de conta existente!');
+                    ->set('warning', $translator->trans('account.has.unavailable_number'));
+
                 return $this->render('account/update.html.twig', [
                     'account' => $account,
                     'form' => $form->createView()
@@ -61,7 +63,7 @@ class AccountController extends AbstractController
             $this->entityManager->flush();
 
             $this->get('session')->getFlashbag()
-                ->set('success', 'Conta criada com sucesso!');
+                ->set('success', $translator->trans('account.did.create'));
 
             return $this->redirectToRoute('account');
         }
@@ -74,7 +76,7 @@ class AccountController extends AbstractController
     /**
      * @Route("account/update/{account_id}", name="update_account")
      */
-    public function update(Request $request, int $account_id, AccountBusiness $accountBusiness): Response
+    public function update(Request $request, int $account_id, AccountBusiness $accountBusiness, TranslatorInterface $translator): Response
     {
         $em = $this->getDoctrine()->getManager();
         $account = $em->getRepository(Account::class)->find($account_id);
@@ -84,7 +86,9 @@ class AccountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$accountBusiness->isUnique($account)) {
-                $this->get('session')->getFlashbag()->set('warning', 'Número de conta existente!');
+                $this->get('session')->getFlashbag()
+                    ->set('warning', $translator->trans('account.has.unavailable_number'));
+
                 return $this->render('account/update.html.twig', [
                     'account' => $account,
                     'form' => $form->createView()
@@ -94,7 +98,7 @@ class AccountController extends AbstractController
             $em->persist($account);
             $em->flush();
 
-            $this->addFlash('success', "Conta atualizada!");
+            $this->addFlash('success', $translator->trans('account.did.update'));
             return $this->redirectToRoute("account");
         }
 
@@ -107,7 +111,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/account/delete/{account_id}", name="delete_account")
      */
-    public function delete(int $account_id, AccountBusiness $accountBusiness): Response
+    public function delete(int $account_id, AccountBusiness $accountBusiness, TranslatorInterface $translator): Response
     {
         $account = $this->entityManager
             ->getRepository(Account::class)
@@ -115,15 +119,15 @@ class AccountController extends AbstractController
 
         if (!$account) {
             $tipo = "warning";
-            $mensagem = "Conta não encontrada.";
+            $mensagem = $translator->trans("account.is.absent");
         } elseif ($accountBusiness->hasTransaction($account)) {
             $tipo = "warning";
-            $mensagem = "Conta possui transações e não pode ser excluída.";
+            $mensagem = $translator->trans("account.has.transactions");
         } else {
             $this->entityManager->remove($account);
             $this->entityManager->flush();
             $tipo = "success";
-            $mensagem = "Conta foi excluída com sucesso!";
+            $mensagem = $translator->trans("account.did.delete");
         }
 
         $this->get('session')->getFlashbag()->set($tipo, $mensagem);

@@ -1,3 +1,32 @@
+person:
+  is:
+    absent: Person not found!
+  did:
+    register: Person successfully registered!
+    update: Person updated!
+    delete: Person successfully deleted!
+  has:
+    account: This person has an account and can not be deleted.
+
+cpf:
+  is:
+    invalid: Invalid CPF!
+
+account:
+  is:
+    absent: Account not found!
+  did:
+    create: Account successfully created!
+    update: Account successfully updated!
+    delete: Account sucessfully deleted!
+  has:
+    unavailable_number: This account number is unavailable!
+    transactions: This account has transactions and can not be deleted.
+
+transaction:
+  did:
+    succeed: Transaction successfully completed!
+
 amount:
   is:
     invalid: Invalid amount!
@@ -5,20 +34,3 @@ amount:
 balance:
   is:
     insufficient: Insufficient funds!
-
-transaction:
-  has:
-    succeed: Transaction successfully completed!
-
-cpf:
-  is:
-    invalid: Invalid CPF!
-
-person:
-  is:
-    registered: Person successfully registered!
-    updated: Person updated!
-    absent: Person not found!
-    deleted: Person successfully deleted!
-  has:
-    account: This person has an account and should not be deleted.

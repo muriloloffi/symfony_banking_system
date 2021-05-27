@@ -5,8 +5,9 @@ namespace App\Business;
 use App\Entity\Account;
 use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
+use UnexpectedValueException;
 
-class PersonBusiness 
+class PersonBusiness
 {
     private EntityManagerInterface $entityManager;
 
@@ -28,15 +29,21 @@ class PersonBusiness
         return false;
     }
 
-    public function validateCPF(Person $person): bool
+    /**
+     * Tests CPF validity and uniqueness.
+     * @param Person $person 
+     * @return bool 
+     * @throws UnexpectedValueException 
+     */
+    public function isValidCPF(Person $person): bool
     {
         $cpf = $person->getCpf();
-        $cpf = preg_replace( '/[^0-9]/is', '', $cpf );
+        $cpf = preg_replace('/[^0-9]/is', '', $cpf);
 
         if (!$this->isUniqueCpf($cpf)) {
             return false;
         }
-    
+
         if (strlen($cpf) != 11) {
             return false;
         }
@@ -44,7 +51,7 @@ class PersonBusiness
         if (preg_match('/(\d)\1{10}/', $cpf)) {
             return false;
         }
-    
+
         // for ($t = 9; $t < 11; $t++) {
         //     for ($d = 0, $c = 0; $c < $t; $c++) {
         //         $d += $cpf[$c] * (($t + 1) - $c);

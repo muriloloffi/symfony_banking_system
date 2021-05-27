@@ -49,7 +49,7 @@ class PersonController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$personBusiness->validateCPF($person)) {
+            if (!$personBusiness->isValidCPF($person)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', $translator->trans('cpf.is.invalid'));
 
@@ -63,7 +63,7 @@ class PersonController extends AbstractController
             $this->entityManager->flush();
 
             $this->get('session')->getFlashbag()
-                ->set('success', $translator->trans('person.is.registered'));
+                ->set('success', $translator->trans('person.did.register'));
 
             return $this->redirectToRoute('persons');
         }
@@ -79,15 +79,18 @@ class PersonController extends AbstractController
     public function update(Request $request, int $person_id, PersonBusiness $personBusiness, TranslatorInterface $translator): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $person = $em->getRepository(Person::class)->find($person_id);
+        $formerPerson = $em->getRepository(Person::class)->find($person_id);
+        /** @var Person $person */
+        $person = $formerPerson;
 
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$personBusiness->validateCPF($person)) {
+            if (!$personBusiness->isValidCPF($person)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', $translator->trans('cpf.is.invalid'));
+
                 return $this->render('person/update.html.twig', [
                     'person' => $person,
                     'form' => $form->createView()
@@ -97,7 +100,7 @@ class PersonController extends AbstractController
             $em->persist($person);
             $em->flush();
 
-            $this->addFlash('success', $translator->trans("person.is.updated"));
+            $this->addFlash('success', $translator->trans("person.did.update"));
             return $this->redirectToRoute("persons");
         }
 
@@ -126,7 +129,7 @@ class PersonController extends AbstractController
             $this->entityManager->remove($person);
             $this->entityManager->flush();
             $tipo = "success";
-            $mensagem = $translator->trans("person.is.deleted");
+            $mensagem = $translator->trans("person.did.delete");
         }
 
         $this->get('session')->getFlashbag()->set($tipo, $mensagem);
