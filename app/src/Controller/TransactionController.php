@@ -25,7 +25,7 @@ class TransactionController extends AbstractController
     }
 
     /**
-     * @Route("/transacion/statement/{account_id}", name="statement")
+     * @Route("/transaction/statement/{account_id}", name="statement")
      */
     public function bankStatement(int $account_id): Response
     {

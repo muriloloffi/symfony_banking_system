@@ -1,2 +1,18 @@
 transaction:
-  title: Transactions -&nbsp
+  title: "Transactions -&nbsp"
+  person:
+    id: "%name% -- ITR: %cpf%"
+  account:
+    info: "Account: %number% - Balance: %balance%"
+  statement:
+    title: "Statement"
+    header:
+      date: "Date"
+      operation: "Operation"
+      values: "Values"
+    footer:
+      balance: "Balance:"
+
+# Variable text shown in the statement table
+Depositar: "Deposit"
+Sacar: "Withdraw"

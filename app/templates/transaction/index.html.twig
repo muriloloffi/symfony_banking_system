@@ -10,27 +10,48 @@
 {% block body %}
 
 	<h2>
-		{{ account.person.name }}
-		- CPF:
-		{{ account.person.cpf }}
+		{% trans with {
+            '%name%': account.person.name, 
+            '%cpf%': account.person.cpf 
+        } from 'transaction' %}
+		transaction.person.id
+		{% endtrans %}
 	</h2>
 	<h3>
-		Conta:
-		{{ account.number }}
-		- Saldo:
-		{{ account.balance | format_currency('BRL') }}
+		{% trans with {
+            '%number%': account.number, 
+            '%balance%': account.balance | format_currency('BRL') 
+        } from 'transaction' %}
+		transaction.account.info
+		{% endtrans %}
 	</h3>
 
 	{% if accountStatement is defined %}
 
 		<br><br>
-		<h4>Extrato:</h4>
+		<h4>
+			{% trans from 'transaction' %}
+			transaction.statement.title
+			{% endtrans %}
+		</h4>
 		<table class="table table-striped table-hover">
 			<thead>
 				<tr>
-					<th>Data</th>
-					<th>Operação</th>
-					<th>Valor</th>
+					<th>
+						{% trans from 'transaction' %}
+						transaction.statement.header.date
+						{% endtrans %}
+					</th>
+					<th>
+						{% trans from 'transaction' %}
+						transaction.statement.header.operation
+						{% endtrans %}
+					</th>
+					<th>
+						{% trans from 'transaction' %}
+						transaction.statement.header.values
+						{% endtrans %}
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -38,13 +59,17 @@
 				{% for record in accountStatement %}
 					<tr>
 						<td>{{ record.getCreatedAt | date('d-m-Y h:m:s') }}</td>
-						<td>{{ record.action }}</td>
+						<td>{{ record.action|trans({}, 'transaction') }}</td>
 						<td>{{ record.value | format_currency('BRL') }}</td>
 					</tr>
 				{% endfor %}
 
 				<tr>
-					<td class="table-dark" colspan="2">Saldo:</td>
+					<td class="table-dark" colspan="2">
+						{% trans from 'transaction' %}
+						transaction.statement.footer.balance
+						{% endtrans %}
+					</td>
 					<td class="table-dark">
 						{{ balance | format_currency('BRL') }}
 					</td>
