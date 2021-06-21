@@ -72,7 +72,6 @@ class TransactionController extends AbstractController
                 ? $accountBusiness->balanceDeposit($transaction->getAccount(), $transaction->getValue())
                 : $accountBusiness->balanceWithdraw($transaction->getAccount(), $transaction->getValue());
 
-            $transaction->setCreatedAt(new \DateTime());
             $this->entityManager->persist($transaction);
             $this->entityManager->flush();
 

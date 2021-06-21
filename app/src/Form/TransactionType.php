@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TransactionType extends AbstractType
@@ -21,54 +22,58 @@ class TransactionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('person', EntityType::class, [
-            'class' => Person::class,
-            'placeholder' => 'Selecione o cliente',
-            'label' => "Pessoa:",
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('p')
-                    ->orderBy('p.name', 'ASC');
-            },
-            'choice_label' => 'name',
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        ->add('value', MoneyType::class, [
-            'label' => "Valor:",
-            'currency' => "BRL",
-            'data' => '.0',
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        ->add('action', ChoiceType::class,[
-            'label' => "Depositar / Sacar:",
-            'choices' => [
-                'Depositar' => 'Depositar',
-                'Sacar' => 'Sacar'
-            ],            
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        ->add('submit', SubmitType::class, [
-            'label' => "Salvar",
-            'attr' => [
-                'class' => 'btn btn-primary'
-            ]
-        ]);
+            ->add('person', EntityType::class, [
+                'class' => Person::class,
+                'placeholder' => 'Selecione o cliente',
+                'label' => "Pessoa:",
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->orderBy('p.name', 'ASC');
+                },
+                'choice_label' => function ($person) {
+                    return $person->getName() . ' - ' . $person->cpfMask($person->getCpf());
+                },
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('value', MoneyType::class, [
+                'label' => "Valor:",
+                'currency' => "BRL",
+                'data' => '.0',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('action', ChoiceType::class, [
+                'label' => "Depositar / Sacar:",
+                'choices' => [
+                    'Depositar' => 'Depositar',
+                    'Sacar' => 'Sacar'
+                ],
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => "Salvar",
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                ]
+            ]);
 
-        $formModifier = function (FormInterface $form, Person $person = null){
+        $formModifier = function (FormInterface $form, Person $person = null) {
             $accounts = null === $person ? [] : $person->getAccounts();
 
-            
+
             $form->add('account', EntityType::class, [
                 'class' => Account::class,
                 'placeholder' => 'Selecione um número de conta',
-                'label' => "Conta:",
+                'label' => 'Conta:',
                 'choices' => $accounts,
-                'choice_label' => 'number',
+                'choice_label' => function (Account $account) {
+                    return $account->getNumber() . ' - Saldo: R$ ' . $account->getBalance();
+                },
                 'attr' => [
                     'class' => 'form-control'
                 ]
@@ -86,7 +91,7 @@ class TransactionType extends AbstractType
 
         $builder->get('person')->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier){
+            function (FormEvent $event) use ($formModifier) {
                 $person = $event->getForm()->getData();
 
                 $formModifier($event->getForm()->getParent(), $person);

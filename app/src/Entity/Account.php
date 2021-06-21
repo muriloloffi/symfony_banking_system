@@ -6,10 +6,13 @@ use App\Repository\AccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AccountRepository::class)
+ * @UniqueEntity("number",
+ *      message="Este número de conta já pertence a outro usuário.")
  */
 class Account
 {
@@ -27,7 +30,7 @@ class Account
     private $person;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(name="number", type="string", length=10, unique=true)
      * @Assert\NotBlank(message="Campo número não pode ser vazio!")
      */
     private $number;
@@ -38,7 +41,7 @@ class Account
     private $balance = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="account", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="account", orphanRemoval=false)
      */
     private $transactions;
 

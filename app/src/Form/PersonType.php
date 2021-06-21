@@ -13,30 +13,32 @@ class PersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('name', TextType::class, [
-            'label' => "Nome da Pessoa:",
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        ->add('cpf', TextType::class, [
-            'label' => "Número do Cadastro de Pessoa Física (CPF):",
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        ->add('addressOne', TextType::class, [
-            'label' => "Endereço (rua e número):",
-            'attr' => [
-                'class' => 'form-control'
-            ]
-        ])
-        ->add('submit', SubmitType::class, [
-            'label' => "Salvar",
-            'attr' => [
-                'class' => 'btn btn-primary'
-            ]
-        ]);
+            ->add('name', TextType::class, [
+                'label' => "Nome da Pessoa:",
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('cpf', TextType::class, [
+                'label' => "Número do Cadastro de Pessoa Física (CPF):",
+                'attr' => [
+                    'class' => 'form-control cpf',
+                    'data-mask' => "000.000.000-00",
+                    'placeholder' => '___.___.___-__'
+                ]
+            ])
+            ->add('addressOne', TextType::class, [
+                'label' => "Endereço (rua e número):",
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => "Salvar",
+                'attr' => [
+                    'class' => 'btn btn-primary'
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

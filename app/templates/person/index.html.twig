@@ -35,16 +35,16 @@
         </thead>
         <tbody>
 
-        {% for persona in persons %}
+        {% for person in people %}
             <tr>
-                <td>{{ persona.name }}</td>
-                <td>{{ persona.cpf }}</td>
-                <td>{{ persona.addressOne }} </td>
+                <td>{{ person.name }}</td>
+                <td class="cpf">{{ person.cpf }}</td>
+                <td>{{ person.addressOne }} </td>
                 <td>
-                    <a class="btn btn-sm btn-success" href="{{ path('update_person', {"person_id": persona.id}) }}">
+                    <a class="btn btn-sm btn-success" href="{{ path('update_person', {"person_id": person.id}) }}">
                         <i class="fa fa-pencil"></i>
                     </a>
-                    <a class="btn btn-sm btn-danger bt_delete_person" href="{{ path('delete_person', {"person_id": persona.id}) }}">
+                    <a class="btn btn-sm btn-danger bt_delete_person" href="{{ path('delete_person', {"person_id": person.id}) }}">
                         <i class="fa fa-trash"></i>
                     </a>
                 </td>

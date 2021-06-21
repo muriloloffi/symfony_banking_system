@@ -12,7 +12,7 @@
 	<h2>
 		{% trans with {
             '%name%': account.person.name, 
-            '%cpf%': account.person.cpf 
+            '%cpf%': account.person.cpf
         } from 'transaction' %}
 		transaction.person.id
 		{% endtrans %}
@@ -58,7 +58,7 @@
 
 				{% for record in accountStatement %}
 					<tr>
-						<td>{{ record.getCreatedAt | date('d-m-Y h:m:s') }}</td>
+						<td>{{ record.getCreatedAt|format_datetime('short') }}</td>
 						<td>{{ record.action | trans({}, 'transaction') }}</td>
 						<td>{{ record.value | format_currency('BRL') }}</td>
 					</tr>

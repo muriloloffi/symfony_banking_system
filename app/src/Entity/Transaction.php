@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\TransactionRepository;
+use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Transaction
 {
@@ -47,6 +48,15 @@ class Transaction
      * @ORM\Column(type="string", length=9)
      */
     private $action;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function updatedTimestamps(): void
+    {
+        if ($this->getCreatedAt() === null)
+            $this->setCreatedAt(new DateTime('now', new DateTimeZone('America/Sao_Paulo')));
+    }
 
     public function getId(): ?int
     {

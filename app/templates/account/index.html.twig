@@ -37,11 +37,15 @@
         {% for account in accounts %}
             <tr>
                 <td>{{ account.person.name }}</td>
-                <td>{{ account.person.cpf }}</td>
+                <td class="cpf">{{ account.person.cpf }}</td>
                 <td>{{ account.number }} </td>
                 <td>
-                    <a class="btn btn-sm btn-success" href="{{ path('update_account', {"account_id": account.id}) }}"><i class="fa fa-pencil"></i></a>
-                    <a class="btn btn-sm btn-danger bt_delete_account" href="{{ path('delete_account', {"account_id": account.id}) }}"><i class="fa fa-trash"></i></a>
+                    <a class="btn btn-sm btn-success" href="{{ path('update_account', {"account_id": account.id}) }}">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a class="btn btn-sm btn-danger bt_delete_account" href="{{ path('delete_account', {"account_id": account.id}) }}">
+                        <i class="fa fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         {% endfor %}

@@ -1,6 +1,6 @@
 transaction:
   person:
-    id: "%name% -- ITR: %cpf%"
+    id: "%name% - ITR: <span class='cpf'> %cpf% </span>"
   account:
     info: "Account: %number% - Balance: %balance%"
   statement:

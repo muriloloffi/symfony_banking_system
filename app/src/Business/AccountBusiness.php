@@ -15,6 +15,20 @@ class AccountBusiness
         $this->entityManager = $entityManager;
     }
 
+    public function isValidAccNumber(Account $account): bool
+    {
+        $number = $account->getNumber();
+        $number = preg_replace('/[^0-9]/is', '', $number);
+
+        if (strlen($number) > 10)
+            return false;
+
+        if (preg_match('/(\d)\1{10}/', $number))
+            return false;
+
+        return true;
+    }
+
     public function isUnique(Account $account): bool
     {
         $receivedAccount = $this->entityManager
@@ -50,7 +64,7 @@ class AccountBusiness
     public function balanceDeposit(Account $account, float $amount): void
     {
         $account->setBalance($account->getBalance() + $amount);
-        
+
         $this->entityManager->persist($account);
         $this->entityManager->flush();
     }

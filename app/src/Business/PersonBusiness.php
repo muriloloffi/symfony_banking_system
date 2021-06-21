@@ -40,10 +40,6 @@ class PersonBusiness
         $cpf = $person->getCpf();
         $cpf = preg_replace('/[^0-9]/is', '', $cpf);
 
-        if (!$this->isUniqueCpf($cpf)) {
-            return false;
-        }
-
         if (strlen($cpf) != 11) {
             return false;
         }
@@ -64,8 +60,9 @@ class PersonBusiness
         return true;
     }
 
-    private function isUniqueCpf(int $cpf): bool
+    public function isUniqueCpf(Person $person): bool
     {
+        $cpf = preg_replace('/[^0-9]/is', '', $person->getCpf());
         $receivedCpf = $this->entityManager
             ->getRepository(Person::class)
             ->findBy(['cpf' => $cpf]);

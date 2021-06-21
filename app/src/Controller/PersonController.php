@@ -23,7 +23,7 @@ class PersonController extends AbstractController
     }
 
     /**
-     * @Route("/person", name="persons", methods={"GET"})
+     * @Route("/people", name="people")
      */
     public function index(): Response
     {
@@ -33,7 +33,7 @@ class PersonController extends AbstractController
             ->findBy([], ['name' => 'ASC']);
 
         return $this->render('person/index.html.twig', [
-            'persons' => $personList,
+            'people' => $personList,
         ]);
     }
 
@@ -49,7 +49,7 @@ class PersonController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$personBusiness->isValidCPF($person)) {
+            if (!$personBusiness->isValidCPF($person) || !$personBusiness->isUniqueCpf($person)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', $translator->trans('cpf.is.invalid'));
 
@@ -65,7 +65,7 @@ class PersonController extends AbstractController
             $this->get('session')->getFlashbag()
                 ->set('success', $translator->trans('person.did.register'));
 
-            return $this->redirectToRoute('persons');
+            return $this->redirectToRoute('people');
         }
 
         return $this->render('person/create.html.twig', [
@@ -79,9 +79,8 @@ class PersonController extends AbstractController
     public function update(Request $request, int $person_id, PersonBusiness $personBusiness, TranslatorInterface $translator): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $formerPerson = $em->getRepository(Person::class)->find($person_id);
-        /** @var Person $person */
-        $person = $formerPerson;
+
+        $person = $em->getRepository(Person::class)->find($person_id);
 
         $form = $this->createForm(PersonType::class, $person);
         $form->handleRequest($request);
@@ -101,7 +100,7 @@ class PersonController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', $translator->trans("person.did.update"));
-            return $this->redirectToRoute("persons");
+            return $this->redirectToRoute("people");
         }
 
         return $this->render('person/update.html.twig', [
@@ -132,7 +131,8 @@ class PersonController extends AbstractController
             $mensagem = $translator->trans("person.did.delete");
         }
 
-        $this->get('session')->getFlashbag()->set($tipo, $mensagem);
-        return $this->redirectToRoute("persons");
+        $this->get('session')->getFlashbag()
+            ->set($tipo, $mensagem);
+        return $this->redirectToRoute("people");
     }
 }

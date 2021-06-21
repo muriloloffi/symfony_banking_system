@@ -49,7 +49,7 @@ class AccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$accountBusiness->isUnique($account)) {
+            if (!$accountBusiness->isValidAccNumber($account) || !$accountBusiness->isUnique($account)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', $translator->trans('account.has.unavailable_number'));
 
@@ -85,7 +85,7 @@ class AccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$accountBusiness->isUnique($account)) {
+            if (!$accountBusiness->isValidAccNumber($account)) {
                 $this->get('session')->getFlashbag()
                     ->set('warning', $translator->trans('account.has.unavailable_number'));
 

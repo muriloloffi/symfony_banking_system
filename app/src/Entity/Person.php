@@ -6,10 +6,14 @@ use App\Repository\PersonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
+ * @UniqueEntity("cpf",
+ *      message="Este CPF já pertence a outro usuário.")
+ * @ORM\HasLifecycleCallbacks
  */
 class Person
 {
@@ -21,13 +25,17 @@ class Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=200)
      * @Assert\NotBlank(message="Campo nome não pode ser vazio!")
+     * @Assert\Regex(
+     *      pattern="/.[a-z]+$/i",
+     *      message="Apenas letras e espaços são permitidos no campo nome."
+     * )
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=11)
+     * @ORM\Column(name="cpf", type="string", length=11, unique=true)
      * @Assert\NotBlank(message="Campo cpf não pode ser vazio!")
      */
     private $cpf;
@@ -42,6 +50,17 @@ class Person
      * @ORM\OneToMany(targetEntity=Account::class, mappedBy="person")
      */
     private $accounts;
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function normalizeCpf(): void
+    {
+        $this->setCpf(
+            preg_replace('/[^0-9]/is', '', $this->getCpf())
+        );
+    }
 
     public function __construct()
     {
@@ -117,5 +136,19 @@ class Person
         }
 
         return $this;
+    }
+
+    public function cpfMask($val, $mask = '###.###.###-##')
+    {
+        $masked = '';
+        $k = 0;
+        for ($i = 0; $i <= strlen($mask) - 1; $i++) {
+            if ($mask[$i] == '#') {
+                if (isset($val[$k])) $masked .= $val[$k++];
+            } else {
+                if (isset($mask[$i])) $masked .= $mask[$i];
+            }
+        }
+        return $masked;
     }
 }
