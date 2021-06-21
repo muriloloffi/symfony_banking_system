@@ -1,0 +1,15 @@
+account:
+  index:
+    title: "Accounts"
+  table:
+    title: "Accounts list"
+    name-header: "Name"
+    document-header: "ITR"
+    account-header: "Account number"
+    action: "Actions"
+  footer:
+    button: "Register account"
+  create:
+    title: "Account registration"
+    form:
+      title: "Register account"

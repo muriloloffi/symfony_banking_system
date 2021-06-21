@@ -1,12 +1,18 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    Cadastro de conta - 
+    {% trans from 'account' %}
+    account.create.title
+    {% endtrans %}
 {% endblock %}
 
 {% block body %}
 
-    <h1>Cadastrar conta</h1>
+    <h1>
+        {% trans from 'account' %}
+        account.create.form.title
+        {% endtrans %}
+    </h1>
     <hr>
     {% include "account/_form.html.twig" %}
     

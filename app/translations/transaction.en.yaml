@@ -4,7 +4,7 @@ transaction:
   account:
     info: "Account: %number% - Balance: %balance%"
   statement:
-    title: "Transactions -&nbsp"
+    title: "Transactions"
     table:
       title: "Statement"
       date-header: "Date"
